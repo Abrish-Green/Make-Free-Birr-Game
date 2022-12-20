@@ -1,7 +1,8 @@
 import React from 'react'
 import { StatusBar } from 'expo-status-bar';
 import { Button, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-
+import * as Speech from 'expo-speech'
+import axios from 'axios'
 const Currency = [
   {
     id:1,
@@ -109,6 +110,7 @@ const styles = StyleSheet.create({
   }
 });
 
+
 export const GenerateRandomMoney = (max=10) => {
   return Math.floor(Math.random() * max)+1
 }
@@ -130,11 +132,14 @@ export default function App() {
   const [generatedNumber, setGeneratedNumber] = React.useState(1)
   const [trial, setTrial] = React.useState(0)
   
+  const AnnounceBalance = (message) => {
+    Speech.speak(message)
+  } 
 
   React.useEffect(() => {
-    setEarned((prev) => Number(prev) + Number(CalculateEarning(generatedNumber)))
-
+  
     console.log(CalculateEarning(generatedNumber))
+    setEarned((prev) => Number(prev) + Number(CalculateEarning(generatedNumber)))
    }, [generatedNumber])
   const AppBar = () => {
   return (<>
@@ -153,6 +158,12 @@ const CoinBox = () => {
   </>)
 }
 const FlipButton = () => {
+
+  
+
+    if (trial === 5) {
+      AnnounceBalance(`You are a winner`)
+    }
   return (
     <>
       {trial === 5 ? 
@@ -195,6 +206,7 @@ const FreeMoney = () => {
     </>
   )
 }
+
   return (
     <>
     <AppBar />
